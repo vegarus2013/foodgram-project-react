@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
-from users.models import Users
+from users.models import User
 
 
 class Ingredient(models.Model):
@@ -84,7 +84,7 @@ class Recipe(models.Model):
     )
 
     author = models.ForeignKey(
-        Users,
+        User,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор'
@@ -149,7 +149,7 @@ class IngredientQuantity(models.Model):
 
 class Favorite(models.Model):
     user = models.ForeignKey(
-        Users,
+        User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
         related_name='favorites'
@@ -175,7 +175,7 @@ class Favorite(models.Model):
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(
-        Users,
+        User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
         related_name='shopping_carts'
