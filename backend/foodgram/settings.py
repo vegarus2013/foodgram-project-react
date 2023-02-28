@@ -43,7 +43,7 @@ ROOT_URLCONF = 'foodgram.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,9 +105,9 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
     },
     "SERIALIZERS": {
-        "user_create": "api.serializers.users.UsersCreateSerializer",
-        "user": "api.serializers.users.UsersSerializer",
-        "current_user": "api.serializers.users.UsersSerializer",
+        "user_create": "api.serializers.users.UserCreateSerializer",
+        "user": "api.serializers.users.UserSerializer",
+        "current_user": "api.serializers.users.UserSerializer",
     },
 }
 

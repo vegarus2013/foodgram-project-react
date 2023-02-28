@@ -7,13 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.serializers.users import (FollowsListSerializer, FollowsSerializer,
-                                   UsersSerializer)
-from users.models import Follows, Users
+                                   UserSerializer)
+from users.models import Follow, Users
 
 
 class UsersViewSet(UserViewSet):
     queryset = Users.objects.all()
-    serializer_class = UsersSerializer
+    serializer_class = UserSerializer
     http_method_names = ['get', 'post', 'delete', 'head']
 
 
@@ -31,7 +31,7 @@ class FollowsApiView(APIView):
         user = request.user
         following = get_object_or_404(Users, id=id)
         follow = get_object_or_404(
-            Follows, user=user, following=following
+            Follow, user=user, following=following
         )
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -14,12 +14,12 @@ from api.serializers.recipes import (FavoritesSerializer,
                                      RecipesListSerializer,
                                      RecipesWriteSerializer,
                                      ShoppingCartsSerializer, TagsSerializer)
-from recipes.models import (Favorites, IngredientQuantitys, Ingredients,
-                            Recipes, ShoppingCarts, Tags)
+from recipes.models import (Favorite, IngredientQuantity, Ingredient,
+                            Recipe, ShoppingCart, Tag)
 
 
 class TagsViewSet(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
+    queryset = Tag.objects.all()
     serializer_class = TagsSerializer
     pagination_class = None
     permission_classes = (IsAdminOrReadOnly,)
@@ -28,7 +28,7 @@ class TagsViewSet(viewsets.ModelViewSet):
 
 
 class IngredientsViewSet(viewsets.ModelViewSet):
-    queryset = Ingredients.objects.all()
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientsSerializer
     pagination_class = None
     permission_classes = (IsAdminOrReadOnly,)
@@ -37,7 +37,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
-    queryset = Recipes.objects.all()
+    queryset = Recipe.objects.all()
     pagination_class = PageNumberPagination
     permission_classes = (IsAuthorOrReadOnly,)
     filterset_class = RecipesFilter
@@ -61,9 +61,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
         user = request.user
-        recipe = get_object_or_404(Recipes, id=pk)
+        recipe = get_object_or_404(Recipe, id=pk)
         favorite = get_object_or_404(
-            Favorites, user=user, recipe=recipe
+            Favorite, user=user, recipe=recipe
         )
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -81,16 +81,16 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
         user = request.user
-        recipe = get_object_or_404(Recipes, id=pk)
+        recipe = get_object_or_404(Recipe, id=pk)
         shopping_cart = get_object_or_404(
-            ShoppingCarts, user=user, recipe=recipe
+            ShoppingCart, user=user, recipe=recipe
         )
         shopping_cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        ingredients = IngredientQuantitys.objects.filter(
+        ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit', 'amount'
         )

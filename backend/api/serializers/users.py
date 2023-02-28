@@ -2,17 +2,17 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import Recipes
-from users.models import Follows, Users
+from recipes.models import Recipe
+from users.models import Follow, Users
 
 
-class UsersCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = Users
         fields = ('email', 'username', 'first_name', 'last_name', 'password')
 
 
-class UsersSerializer(UserSerializer):
+class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -26,17 +26,17 @@ class UsersSerializer(UserSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return (Follows.objects.filter(user=request.user, following=obj)
+        return (Follow.objects.filter(user=request.user, following=obj)
                 .exists())
 
 
 class FollowsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Follows
+        model = Follow
         fields = ('user', 'following')
         validators = [
             UniqueTogetherValidator(
-                queryset=Follows.objects.all(),
+                queryset=Follow.objects.all(),
                 fields=('user', 'following'),
                 message=('Вы уже подписаны на данного пользователя!')
             )
@@ -62,7 +62,7 @@ class FollowsSerializer(serializers.ModelSerializer):
 
 class FollowRecipesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Recipes
+        model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
@@ -80,7 +80,7 @@ class FollowsListSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return (Follows.objects.filter(user=request.user, following=obj)
+        return (Follow.objects.filter(user=request.user, following=obj)
                 .exists())
 
     def get_recipes(self, obj):

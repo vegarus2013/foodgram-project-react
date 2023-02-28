@@ -2,12 +2,13 @@ import csv
 
 from django.core.management import BaseCommand
 
-from recipes.models import Ingredients, Tags
+from recipes.models import Ingredient, Tag
 
 MODELS_FILES = {
-    Ingredients: 'ingredients.csv',
-    Tags: 'tags.csv',
+    Ingredient: 'ingredients.csv',
+    Tag: 'tags.csv',
 }
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):

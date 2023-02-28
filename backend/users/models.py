@@ -42,7 +42,7 @@ class Users(AbstractUser):
         return self.username
 
 
-class Follows(models.Model):
+class Follow(models.Model):
     user = models.ForeignKey(
         Users,
         on_delete=models.CASCADE,

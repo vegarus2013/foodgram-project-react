@@ -1,13 +1,13 @@
 from django_filters import FilterSet, filters
 
-from recipes.models import Ingredients, Recipes, Tags
+from recipes.models import Ingredient, Recipe, Tag
 
 
 class IngredientsFilter(FilterSet):
     name = filters.CharFilter(lookup_expr='startswith')
 
     class Meta:
-        model = Ingredients
+        model = Ingredient
         fields = ('name',)
 
 
@@ -15,7 +15,7 @@ class TagsFilter(FilterSet):
     name = filters.CharFilter(lookup_expr='startswith')
 
     class Meta:
-        model = Tags
+        model = Tag
         fields = ('name',)
 
 
@@ -27,7 +27,7 @@ class RecipesFilter(FilterSet):
     )
 
     class Meta:
-        model = Recipes
+        model = Recipe
         fields = ('tags', 'author', 'is_favorited', 'is_in_shopping_cart')
 
     def filter_is_favorited(self, queryset, name, value):
