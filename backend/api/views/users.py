@@ -8,11 +8,11 @@ from rest_framework.views import APIView
 
 from api.serializers.users import (FollowsListSerializer, FollowsSerializer,
                                    UserSerializer)
-from users.models import Follow, Users
+from users.models import Follow, User
 
 
 class UsersViewSet(UserViewSet):
-    queryset = Users.objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     http_method_names = ['get', 'post', 'delete', 'head']
 
@@ -29,7 +29,7 @@ class FollowsApiView(APIView):
 
     def delete(self, request, id):
         user = request.user
-        following = get_object_or_404(Users, id=id)
+        following = get_object_or_404(User, id=id)
         follow = get_object_or_404(
             Follow, user=user, following=following
         )
@@ -43,7 +43,7 @@ class FollowsListAPIView(ListAPIView):
 
     def get(self, request):
         user = request.user
-        queryset = Users.objects.filter(following__user=user)
+        queryset = User.objects.filter(following__user=user)
         page = self.paginate_queryset(queryset)
         serializer = FollowsListSerializer(
             page, many=True,

@@ -3,12 +3,12 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from recipes.models import Recipe
-from users.models import Follow, Users
+from users.models import Follow, User
 
 
 class UserCreateSerializer(UserCreateSerializer):
     class Meta:
-        model = Users
+        model = User
         fields = ('email', 'username', 'first_name', 'last_name', 'password')
 
 
@@ -16,7 +16,7 @@ class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Users
+        model = User
         fields = (
             'email', 'id', 'username',
             'first_name', 'last_name', 'is_subscribed'
@@ -72,7 +72,7 @@ class FollowsListSerializer(serializers.ModelSerializer):
     recipes_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Users
+        model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
                   'is_subscribed', 'recipes', 'recipes_count')
 
