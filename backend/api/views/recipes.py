@@ -1,21 +1,21 @@
+from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from api.filters import IngredientsFilter, RecipesFilter, TagsFilter
+from api.mixins import ItemMixin
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from api.serializers.recipes import (FavoritesSerializer,
                                      IngredientsSerializer,
                                      RecipesListSerializer,
                                      RecipesWriteSerializer,
                                      ShoppingCartsSerializer, TagsSerializer)
-from recipes.models import (Favorite, IngredientQuantity, Ingredient,
-                            Recipe, ShoppingCart, Tag)
+from recipes.models import (Favorite, Ingredient, IngredientQuantity, Recipe,
+                            ShoppingCart, Tag)
 
 
 class TagsViewSet(viewsets.ModelViewSet):
@@ -50,50 +50,29 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
-        data = {'user': request.user.id, 'recipe': pk}
-        serializer = FavoritesSerializer(
-            data=data, context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return ItemMixin(request, pk, serializer=FavoritesSerializer).add()
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=pk)
-        favorite = get_object_or_404(
-            Favorite, user=user, recipe=recipe
-        )
-        favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return ItemMixin(request, pk, Favorite).delete()
 
     @action(detail=True, permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
-        data = {'user': request.user.id, 'recipe': pk}
-        serializer = ShoppingCartsSerializer(
-            data=data, context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return ItemMixin(
+            request, pk,
+            serializer=ShoppingCartsSerializer
+        ).add()
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=pk)
-        shopping_cart = get_object_or_404(
-            ShoppingCart, user=user, recipe=recipe
-        )
-        shopping_cart.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return ItemMixin(request, pk, ShoppingCart).delete()
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
-        )
+            'ingredient__name', 'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
         shopping_cart = '\n'.join([
             f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
             f'{ingredient["ingredient__measurement_unit"]}'
