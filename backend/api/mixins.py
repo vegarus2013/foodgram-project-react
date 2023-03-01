@@ -14,7 +14,7 @@ class AbstractGETViewSet(
     pass
 
 
-class ItemMixin:
+class Cart:
     def __init__(self, request, pk, model=None, serializer=None) -> None:
         self.request = request
         self.pk = pk
