@@ -7,7 +7,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from api.filters import IngredientsFilter, RecipesFilter, TagsFilter
-from api.mixins import ItemMixin
+from api.mixins import Cart
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from api.serializers.recipes import (FavoritesSerializer,
                                      IngredientsSerializer,
@@ -50,29 +50,29 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
-        return ItemMixin(request, pk, serializer=FavoritesSerializer).add()
+        return Cart(request, pk, serializer=FavoritesSerializer).add()
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
-        return ItemMixin(request, pk, Favorite).delete()
+        return Cart(request, pk, Favorite).delete()
 
     @action(detail=True, permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
-        return ItemMixin(
+        return Cart(
             request, pk,
             serializer=ShoppingCartsSerializer
         ).add()
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
-        return ItemMixin(request, pk, ShoppingCart).delete()
+        return Cart(request, pk, ShoppingCart).delete()
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         ingredients = IngredientQuantity.objects.filter(
             recipe__shopping_carts__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
+        ).annotate(amount_sum=Sum('amount'))
         shopping_cart = '\n'.join([
             f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
             f'{ingredient["ingredient__measurement_unit"]}'
