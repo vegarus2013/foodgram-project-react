@@ -64,12 +64,12 @@ sudo docker-compose exec backend python manage.py createsuperuser
 ```bash
 sudo docker-compose exec backend python manage.py import_data
 ```
-##### ***Вы можете дополнить автоматом из готовых набор в базу данных:***
+#### ***Вы можете дополнить автоматом из готовых набор в базу данных:***
 
-[x] Несколько пользвателей
-[x] Несколько рецептов
-[x] Есть своих несколько подписок
-[x] Есть своих несколько избранных
+- [x] Несколько пользвателей
+- [x] Несколько рецептов
+- [x] Есть своих несколько подписок
+- [x] Есть своих несколько избранных
 
 ```bash
 sudo docker-compose exec backend python manage.py import_order_data
