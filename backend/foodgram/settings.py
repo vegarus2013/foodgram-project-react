@@ -1,16 +1,17 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='gms%&_1!2a7es4f%')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='gms%&_1!2a7es4f%')
 
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS', default='*')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,7 +44,7 @@ ROOT_URLCONF = 'foodgram.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
