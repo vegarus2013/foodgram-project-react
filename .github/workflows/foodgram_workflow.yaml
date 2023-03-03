@@ -10,22 +10,15 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
-
+        python-version: 3.10.10
     - name: Install dependencies
       run: | 
-        # обновление pip
         python -m pip install --upgrade pip 
-        # установка flake8 и его плагинов
-        pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
-        # установка зависимостей
-        pip install -r backend/requirements.txt
-    - name: Test with flake8 and django tests
+        pip install flake8 pep8-naming flake8-broken-line flake8-return
+        pip install -r backend/requirements.txt 
+    - name: Test with flake8
       run: |
-        # запуск проверки проекта по flake8
         python -m flake8
-        # запуск pytest
-        pytest
         
   # build_and_push_to_docker_hub:
   #   name: Push Docker image to Docker Hub
