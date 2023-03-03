@@ -7,13 +7,11 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from api.filters import IngredientsFilter, RecipesFilter, TagsFilter
-from api.mixins import Cart
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from api.serializers.recipes import (FavoritesSerializer,
-                                     IngredientsSerializer,
+from api.serializers.recipes import (IngredientsSerializer,
                                      RecipesListSerializer,
-                                     RecipesWriteSerializer,
-                                     ShoppingCartsSerializer, TagsSerializer)
+                                     RecipesWriteSerializer, TagsSerializer)
+from api.utils import add_object_model, delete_object_model
 from recipes.models import (Favorite, Ingredient, IngredientQuantity, Recipe,
                             ShoppingCart, Tag)
 
@@ -48,24 +46,23 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return RecipesListSerializer
         return RecipesWriteSerializer
 
-    @action(detail=True, permission_classes=[IsAuthenticated])
-    def favorite(self, request, pk):
-        return Cart(request, pk, serializer=FavoritesSerializer).add()
+    @action(detail=True, methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
+    def favorite(self, request, pk=None):
+        if request.method == 'POST':
+            return add_object_model(Favorite, request.user, pk)
+        elif request.method == 'DELETE':
+            return delete_object_model(Favorite, request.user, pk)
+        return None
 
-    @favorite.mapping.delete
-    def delete_favorite(self, request, pk):
-        return Cart(request, pk, Favorite).delete()
-
-    @action(detail=True, permission_classes=[IsAuthenticated])
-    def shopping_cart(self, request, pk):
-        return Cart(
-            request, pk,
-            serializer=ShoppingCartsSerializer
-        ).add()
-
-    @shopping_cart.mapping.delete
-    def delete_shopping_cart(self, request, pk):
-        return Cart(request, pk, ShoppingCart).delete()
+    @action(detail=True, methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
+    def shopping_cart(self, request, pk=None):
+        if request.method == 'POST':
+            return add_object_model(ShoppingCart, request.user, pk)
+        elif request.method == 'DELETE':
+            return delete_object_model(ShoppingCart, request.user, pk)
+        return None
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
