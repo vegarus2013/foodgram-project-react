@@ -24,7 +24,6 @@ urlpatterns = [
         FollowsListAPIView.as_view(),
         name='subscription'
     ),
-
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
 ]
