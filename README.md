@@ -3,7 +3,7 @@
 ![PYTHON](https://img.shields.io/badge/PYTHON-3.10.10-3776AB?style=flat-square&logo=python&logoColor=FFFFFF) ![DJANGO](https://img.shields.io/badge/DJANGO-4.1.5-092E20?style=flat-square&logo=django&logoColor=FFFFFF) ![DRF](https://img.shields.io/badge/DJANGO_REST_FRAMEWORK-3.14.0-A30000?style=flat-square) ![POSTGRES](https://img.shields.io/badge/POSTGRES-13.10-4169E1?style=flat-square&logo=postgresql&logoColor=FFFFFF) ![NGINX](https://img.shields.io/badge/NGINX-1.19.2-009639?style=flat-square&logo=nginx&logoColor=FFFFFF) ![GUNICORN](https://img.shields.io/badge/GUNICORN-20.1.0-499848?style=flat-square&logo=gunicorn&logoColor=FFFFFF) ![DOCKER](https://img.shields.io/badge/DOCKER-2496ED?style=flat-square&logo=docker&logoColor=FFFFFF)
 
 ---
-[![foodgram-project-react workflow](https://github.com/vegarus2013/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/vegarus/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
+[![foodgram-project-react workflow](https://github.com/vegarus2013/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/vegarus2013/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
 
 ### ***О проекте***:
  Онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
