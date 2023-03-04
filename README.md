@@ -5,6 +5,12 @@
 ---
 [![Foodgram workflow](https://github.com/vegarus2013/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)](https://github.com/vegarus2013/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
 
+### ***Сайт развернут на сервере***
+
+- Сайт: [http://45.135.92.197/](http://45.135.92.197/)
+- API: [http://45.135.92.197/api/](http://45.135.92.197/api/)
+- Документации по API: [http://45.135.92.197/api/docs/](http://45.135.92.197/api/docs/)
+
 ### ***О проекте***:
  Онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
@@ -22,8 +28,8 @@ _*Примечание: При выполнении команды `docker-compo
 
 ### ***Как запустить проект:***
 Клонировать репозиторий и перейти в него в командной строке:
-```
-https://github.com/vegarus2013/foodgram-project-react.git
+```bash
+git clone https://github.com/vegarus2013/foodgram-project-react.git
 ```
 
 ```bash
@@ -72,7 +78,7 @@ sudo docker-compose exec backend python manage.py import_data
 - [x] Есть своих несколько избранных
 
 ```bash
-sudo docker-compose exec backend python manage.py import_order_data
+sudo docker-compose exec backend python manage.py import_all_data
 ```
 
 ### ***Регистрация и авторизация:***
@@ -175,7 +181,7 @@ sudo docker-compose exec backend python manage.py import_order_data
 ### ***Регистрация пользователя:***
 POST-запрос: /api/users/
 *Request sample:*
-```python
+```json
 {
     "email": "string",
     "username": "string",
@@ -185,7 +191,7 @@ POST-запрос: /api/users/
 }
 ```
 *Response sample (201):*
-```python
+```json
 {
 
     "email": "string",
@@ -197,7 +203,7 @@ POST-запрос: /api/users/
 }
 ```
 *Response sample (400):*
-```python
+```json
 {
     «field_name»: [
       «Обязательное поле.»
@@ -208,21 +214,22 @@ POST-запрос: /api/users/
 2) Получение токена
 
 POST-запрос: /api/auth/token/login/
-<br /> *Request sample:*
-```python
+
+*Request sample:*
+```json
 {
     «email»: «string»,
     «password»: «string»
 }
 ```
 *Response sample (201):*
-```python
+```json
 {
     «token»: «string»
 }
 ```
 *Response sample (400):*
-```python
+```json
 {
     «field_name»: [
       «string»
