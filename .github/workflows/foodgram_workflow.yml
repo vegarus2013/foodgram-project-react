@@ -46,7 +46,7 @@ jobs:
   copy_compose: 
     name: Copy compose 
     runs-on: ubuntu-latest
-    needs: 
+    needs: build_and_push_to_docker_hub
     steps: 
       - uses: actions/checkout@master 
       - name: copy file via ssh password 
@@ -79,7 +79,7 @@ jobs:
   
   deploy:
     runs-on: ubuntu-latest
-    needs: build_and_push_to_docker_hub
+    needs: copy_compose
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - name: executing remote ssh commands to deploy
