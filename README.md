@@ -14,7 +14,7 @@
 IMAGES            | NAMES             | DESCRIPTIONS
 ------------------|-------------------|--------------------------------------------
 nginx:1.19.3      | infra_nginx_1     | контейнер HTTP-сервера
-postgres:12.4     | infra_db_1        | контейнер базы данных на PostgreSQL
+postgres:13.10     | infra_db_1        | контейнер базы данных на PostgreSQL
 foodgram_backend  | infra_web_1       | контейнер backend-части Django приложения
 foodgram_frontend | infra_frontend_1  | контейнер frontend-части проекта JS-React
 
