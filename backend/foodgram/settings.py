@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='gms%&_1!2a7es4f%')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1' , 'backend']
+ALLOWED_HOSTS = ['127.0.0.1', 'backend']
 
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1']
 
