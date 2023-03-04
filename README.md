@@ -39,7 +39,7 @@ git clone https://github.com/vegarus2013/foodgram-project-react.git
 ```
 
 ```bash
-cd foodgram-project-react
+cd foodgram-project-react/infra
 ```
 
 - Установить Docker и Docker Compose (нативная ОС для Docker — Linux, поэтому запуск Docker-контейнеров должен происходить внутри виртуальной машины с ОС Linux):
@@ -211,8 +211,8 @@ POST-запрос: /api/users/
 *Response sample (400):*
 ```json
 {
-    «field_name»: [
-      «Обязательное поле.»
+    "field_name": [
+      "Обязательное поле."
     ]
 }
 ```
@@ -224,21 +224,21 @@ POST-запрос: /api/auth/token/login/
 *Request sample:*
 ```json
 {
-    «email»: «string»,
-    «password»: «string»
+    "email": "string",
+    "password": "string"
 }
 ```
 *Response sample (201):*
 ```json
 {
-    «token»: «string»
+    "token": "string"
 }
 ```
 *Response sample (400):*
 ```json
 {
-    «field_name»: [
-      «string»
+    "field_name": [
+      "string"
     ]
 }
 ```
