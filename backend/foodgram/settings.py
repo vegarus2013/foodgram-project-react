@@ -9,9 +9,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='gms%&_1!2a7es4f%')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', default=True)
+DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS', default='*')]
+ALLOWED_HOSTS = ['127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = ['http://45.135.92.197']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,7 +46,7 @@ ROOT_URLCONF = 'foodgram.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
