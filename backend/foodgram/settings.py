@@ -11,9 +11,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='gms%&_1!2a7es4f%')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '45.135.92.197']
-
-CSRF_TRUSTED_ORIGINS = ['http://45.135.92.197']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
