@@ -30,7 +30,7 @@ class IngredientQuantitysSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
-class RecipesListSerializer(serializers.ModelSerializer):
+class RecipesSerializer(serializers.ModelSerializer):
     tags = TagsSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
     ingredients = IngredientQuantitysSerializer(
@@ -47,21 +47,27 @@ class RecipesListSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
         )
 
+    def get_ingredients(self, obj):
+        ingredients = IngredientQuantity.objects.filter(recipe=obj)
+        return IngredientQuantitysSerializer(ingredients, many=True).data
+
     def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
+        user = self.context.get('request').user
+        if user.is_anonymous:
             return False
-        return Favorite.objects.filter(user=request.user, recipe=obj).exists()
+        return user.favorites.filter(recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return ShoppingCart.objects.filter(
-            user=request.user, recipe=obj).exists()
+        if request is None or request.user.is_authenticated:
+            return ShoppingCart.objects.filter(
+                user=request.user,
+                recipe=obj
+            ).exists()
+        return False
 
 
-class IngredientWriteSerializer(serializers.ModelSerializer):
+class IngredientCreateSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
@@ -72,11 +78,11 @@ class IngredientWriteSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
 
-class RecipesWriteSerializer(serializers.ModelSerializer):
+class RecipesCreateSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
-    ingredients = IngredientWriteSerializer(many=True)
+    ingredients = IngredientCreateSerializer(many=True)
     author = UserSerializer(read_only=True)
     image = Base64ImageField()
 
@@ -165,7 +171,7 @@ class RecipesWriteSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
-        return RecipesListSerializer(
+        return RecipesSerializer(
             instance, context=context).data
 
 
@@ -180,17 +186,6 @@ class FavoritesSerializer(serializers.ModelSerializer):
         model = Favorite
         fields = ('user', 'recipe')
 
-    def validate(self, data):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        recipe = data['recipe']
-        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
-            raise serializers.ValidationError({
-                'status': 'Рецепт уже есть в избранном!'
-            })
-        return data
-
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
@@ -202,19 +197,6 @@ class ShoppingCartsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('user', 'recipe')
-
-    def validate(self, data):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        recipe = data['recipe']
-        if ShoppingCart.objects.filter(
-            user=request.user, recipe=recipe
-        ).exists():
-            raise serializers.ValidationError({
-                'status': 'Рецепт уже есть в списке покупок!'
-            })
-        return data
 
     def to_representation(self, instance):
         request = self.context.get('request')

@@ -4,13 +4,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from api.filters import IngredientsFilter, RecipesFilter, TagsFilter
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from api.serializers.recipes import (IngredientsSerializer,
-                                     RecipesListSerializer,
-                                     RecipesWriteSerializer, TagsSerializer)
+                                     RecipesCreateSerializer,
+                                     RecipesSerializer, TagsSerializer)
 from api.utils import add_object_model, delete_object_model
 from recipes.models import (Favorite, Ingredient, IngredientQuantity, Recipe,
                             ShoppingCart, Tag)
@@ -42,9 +42,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
 
     def get_serializer_class(self):
-        if self.action in ('list', 'retrieve'):
-            return RecipesListSerializer
-        return RecipesWriteSerializer
+        if self.request.method in SAFE_METHODS:
+            return RecipesSerializer
+        return RecipesCreateSerializer
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
@@ -64,12 +64,19 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return delete_object_model(ShoppingCart, request.user, pk)
         return None
 
-    @action(detail=False, permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=('get', ),
+        permission_classes=(IsAuthenticated, )
+    )
     def download_shopping_cart(self, request):
-        ingredients = IngredientQuantity.objects.filter(
-            recipe__shopping_carts__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(amount_sum=Sum('amount'))
+        ingredients = (
+            IngredientQuantity.objects
+            .filter(recipe__shopping_carts__user=request.user)
+            .values('ingredient__name', 'ingredient__measurement_unit')
+            .annotate(amount_sum=Sum('amount'))
+            .order_by()
+        )
         shopping_cart = '\n'.join([
             f'{ingredient["ingredient__name"]} - {ingredient["amount_sum"]} '
             f'{ingredient["ingredient__measurement_unit"]}'
