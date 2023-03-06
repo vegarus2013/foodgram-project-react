@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from api.filters import IngredientsFilter, RecipesFilter, TagsFilter
+from api.pagination import CustomPageNumberPagination
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from api.serializers.recipes import (IngredientsSerializer,
                                      RecipesCreateSerializer,
@@ -36,7 +36,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 
 class RecipesViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
     permission_classes = (IsAuthorOrReadOnly,)
     filterset_class = RecipesFilter
     filter_backends = (DjangoFilterBackend,)

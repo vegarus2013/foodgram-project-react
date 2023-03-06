@@ -3,10 +3,10 @@ from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from api.pagination import CustomPageNumberPagination
 from api.serializers.users import FollowsSerializer, UserSerializer
 from users.models import Follow, User
 
@@ -14,7 +14,7 @@ from users.models import Follow, User
 class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
 
     @action(
         detail=True, methods=('post', 'delete'),
